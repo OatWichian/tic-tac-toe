@@ -31,9 +31,6 @@ export const AUTH0_API = {
 
 export const MAPBOX_API = process.env.NEXT_PUBLIC_MAPBOX_API;
 
-// ROOT PATH AFTER LOGIN SUCCESSFUL
-// export const PATH_AFTER_LOGIN = paths.dashboard.crm.surveyList; // as '/dashboard'
-
 export const SESSION_STORAGE_ITEMS = {
   accessToken: "accessToken",
   redirectTo: "redirectTo",

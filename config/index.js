@@ -72,6 +72,14 @@ switch (CONFIG_ENV) {
     config = MapData(config);
     break;
   }
+  case 'production':
+  case 'prod': {
+    config.port = 3000;
+    require('dotenv').config({ path: 'config/.env' });
+    config = MapData(config);
+    config.isDebug = false;
+    break;
+  }
   default: {
     ERROR(`########## Error :: NODE_ENV='${CONFIG_ENV}' No config value! ##########`);
     // process.exit(1);

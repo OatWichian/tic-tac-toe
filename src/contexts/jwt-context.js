@@ -104,7 +104,7 @@ function AuthProvider({ children }) {
                 user: userData,
               },
             });
-            dispatchRedux(Actions.intiUserInfo({ ...userData }));
+            // dispatchRedux(Actions.intiUserInfo({ ...userData }));
             setIsReady(true);
             return;
           }
@@ -122,7 +122,7 @@ function AuthProvider({ children }) {
           const { data } = response.data;
           delete data.id;
           const user = { ...data, token: accessToken };
-          dispatchRedux(Actions.intiUserInfo(user));
+          // dispatchRedux(Actions.intiUserInfo(user));
           dispatch({
             type: 'INITIALIZE',
             payload: {
@@ -178,7 +178,7 @@ function AuthProvider({ children }) {
       },
     });
 
-    dispatchRedux(Actions.intiUserInfo(response.data.data));
+    // dispatchRedux(Actions.intiUserInfo(response.data.data));
     // if (themeLand?.theme_detail) {
     //   setColor({
     //     lighter: '',
@@ -212,7 +212,7 @@ function AuthProvider({ children }) {
 
   const logout = async () => {
     setSession(null);
-    dispatchRedux(Actions.clearUserInfo());
+    // dispatchRedux(Actions.clearUserInfo());
     dispatch({ type: 'LOGOUT' });
   };
 

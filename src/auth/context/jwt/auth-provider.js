@@ -85,7 +85,7 @@ export function AuthProvider({ children }) {
             user,
           },
         });
-        dispatchRedux(Actions.intiUserInfo(user));
+        // dispatchRedux(Actions.intiUserInfo(user));
       } else {
         dispatch({
           type: 'INITIAL',
@@ -132,7 +132,7 @@ export function AuthProvider({ children }) {
         user,
       },
     });
-    dispatchRedux(Actions.intiUserInfo(user));
+    // dispatchRedux(Actions.intiUserInfo(user));
   }, []);
 
   // REGISTER
@@ -164,7 +164,7 @@ export function AuthProvider({ children }) {
     dispatch({
       type: 'LOGOUT',
     });
-    dispatchRedux(Actions.clearUserInfo());
+    // dispatchRedux(Actions.clearUserInfo());
   }, []);
 
   // ----------------------------------------------------------------------
