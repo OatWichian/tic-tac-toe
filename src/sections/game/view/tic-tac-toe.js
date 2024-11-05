@@ -278,6 +278,18 @@ const Modal = styled.div`
   &.show {
     transform: translate(-50%, -50%) scale(1);
   }
+  @media (max-width: 768px) {
+    left: 50%;
+    top: 55%;
+  }
+  @media (min-width: 768px) {
+    left: 50%;
+    top: 35%;
+  }
+  @media (min-width: 1024px) {
+    left: 60.5%;  
+    top: 60%;
+  }
 `;
 
 const ModalTitle = styled.div`
