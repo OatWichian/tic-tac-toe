@@ -53,13 +53,16 @@ export default function TicTacToe() {
   const [modalTitle, setModalTitle] = useState('');
 
   useEffect(() => {
-    checkWinner();
-    if (!won) {
-      checkDraw();
-    } else {
-      updateGameScore(!xTurn ? 'win' : 'lost');
+    if (won) {
+      updateGameScore(xTurn ? 'win' : 'lost');
     }
-  }, [won, boardData]);
+  }, [won]);
+
+  useEffect(() => {
+    if (!won && !isDraw) {
+      checkDraw();
+    }
+  }, [boardData]);
 
   useEffect(() => {
     if (!xTurn && !won && !isDraw) {
@@ -69,69 +72,76 @@ export default function TicTacToe() {
 
   const updateBoardData = (idx) => {
     if (!boardData[idx] && !won) {
-      let value = xTurn ? 'X' : 'O';
-      setBoardData({ ...boardData, [idx]: value });
-      setXTurn(!xTurn);
+      const value = xTurn ? 'X' : 'O';
+      const newBoardData = { ...boardData, [idx]: value };
+      setBoardData(newBoardData);
+      const hasWon = checkWinner(newBoardData, value); // Check if the current move wins
+      if (!hasWon) {
+        setXTurn(!xTurn); // Switch turn only if no one has won
+      }
     }
   };
 
-  const getBestMove = () => {
-    // ตรวจสอบว่าผู้เล่นกำลังจะชนะหรือไม่ ถ้าใช่ บอทจะป้องกัน
+  const checkWinner = (board, player) => {
     for (let [a, b, c] of WINNING_COMBO) {
-      if (boardData[a] === 'O' && boardData[b] === 'O' && !boardData[c]) return updateBoardData(c);
-      if (boardData[a] === 'O' && boardData[c] === 'O' && !boardData[b]) return updateBoardData(b);
-      if (boardData[b] === 'O' && boardData[c] === 'O' && !boardData[a]) return updateBoardData(a);
+      if (board[a] && board[a] === board[b] && board[a] === board[c]) {
+        setWon(true);
+        setWonCombo([a, b, c]);
+        setModalTitle(`Player ${player} Wins!!!`);
+        return true; // A player has won
+      }
     }
-
-    // 2. Block the player if they're about to win
-    for (let [a, b, c] of WINNING_COMBO) {
-      if (boardData[a] === 'X' && boardData[b] === 'X' && !boardData[c]) return updateBoardData(c);
-      if (boardData[a] === 'X' && boardData[c] === 'X' && !boardData[b]) return updateBoardData(b);
-      if (boardData[b] === 'X' && boardData[c] === 'X' && !boardData[a]) return updateBoardData(a);
-    }
-    return null;
-  };
-
-  const botMove = () => {
-    // หาช่องที่ดีที่สุดเพื่อป้องกัน
-    const bestMove = getBestMove();
-    if (bestMove !== null) {
-      setBoardData((prevBoardData) => ({
-        ...prevBoardData,
-        [bestMove]: 'O',
-      }));
-      setXTurn(true);
-      return;
-    }
-
-    // ถ้าไม่มีช่องต้องป้องกัน บอทจะสุ่มเลือกช่องว่าง
-    const emptyIndices = Object.keys(boardData).filter((key) => !boardData[key]);
-    if (emptyIndices.length > 0) {
-      const randomIndex = emptyIndices[Math.floor(Math.random() * emptyIndices.length)];
-      setBoardData((prevBoardData) => ({
-        ...prevBoardData,
-        [randomIndex]: 'O',
-      }));
-      setXTurn(true);
-    }
+    return false; // No winner
   };
 
   const checkDraw = () => {
-    let check = Object.keys(boardData).every((v) => boardData[v]);
-    setIsDraw(check);
-    if (check) setModalTitle('Match Draw!!!');
+    const isAllFilled = Object.values(boardData).every((v) => v);
+    setIsDraw(isAllFilled);
+    if (isAllFilled) {
+      setModalTitle('Match Draw!!!');
+    }
   };
 
-  const checkWinner = () => {
-    WINNING_COMBO.forEach((bd) => {
-      const [a, b, c] = bd;
-      if (boardData[a] && boardData[a] === boardData[b] && boardData[a] === boardData[c]) {
-        setWon(true);
-        setWonCombo([a, b, c]);
-        setModalTitle(`Player ${!xTurn ? 'X' : 'Bot'} Win!!!`);
+  const botMove = () => {
+    const emptyIndices = Object.keys(boardData).filter((key) => !boardData[key]);
+
+    // Check if the bot can win
+    for (let [a, b, c] of WINNING_COMBO) {
+      if (boardData[a] === 'O' && boardData[b] === 'O' && !boardData[c]) {
+        updateBoardData(c); // Bot wins
         return;
       }
-    });
+      if (boardData[a] === 'O' && boardData[c] === 'O' && !boardData[b]) {
+        updateBoardData(b); // Bot wins
+        return;
+      }
+      if (boardData[b] === 'O' && boardData[c] === 'O' && !boardData[a]) {
+        updateBoardData(a); // Bot wins
+        return;
+      }
+    }
+
+    // Check if the player can win and block
+    for (let [a, b, c] of WINNING_COMBO) {
+      if (boardData[a] === 'X' && boardData[b] === 'X' && !boardData[c]) {
+        updateBoardData(c); // Block player from winning
+        return;
+      }
+      if (boardData[a] === 'X' && boardData[c] === 'X' && !boardData[b]) {
+        updateBoardData(b); // Block player from winning
+        return;
+      }
+      if (boardData[b] === 'X' && boardData[c] === 'X' && !boardData[a]) {
+        updateBoardData(a); // Block player from winning
+        return;
+      }
+    }
+
+    // If no immediate win or block, make a random move
+    if (emptyIndices.length > 0) {
+      const randomIndex = emptyIndices[Math.floor(Math.random() * emptyIndices.length)];
+      updateBoardData(randomIndex);
+    }
   };
 
   const reset = () => {
@@ -158,9 +168,7 @@ export default function TicTacToe() {
   };
 
   useEffect(() => {
-    if (gameScoreIndividual?.uuid) {
-      dispatch(Actions.fetchUserInfo());
-    }
+    dispatch(Actions.fetchUserInfo());
   }, [gameScoreIndividual]);
 
   const ScoreBoard = ({ score, streak }) => {
