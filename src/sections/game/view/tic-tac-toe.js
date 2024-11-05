@@ -56,6 +56,8 @@ export default function TicTacToe() {
     checkWinner();
     if (!won) {
       checkDraw();
+    } else {
+      updateGameScore(!xTurn ? 'win' : 'lost');
     }
   }, [won, boardData]);
 
@@ -75,11 +77,17 @@ export default function TicTacToe() {
 
   const getBestMove = () => {
     // ตรวจสอบว่าผู้เล่นกำลังจะชนะหรือไม่ ถ้าใช่ บอทจะป้องกัน
-    for (let combo of WINNING_COMBO) {
-      const [a, b, c] = combo;
-      if (boardData[a] === 'X' && boardData[b] === 'X' && !boardData[c]) return c;
-      if (boardData[a] === 'X' && boardData[c] === 'X' && !boardData[b]) return b;
-      if (boardData[b] === 'X' && boardData[c] === 'X' && !boardData[a]) return a;
+    for (let [a, b, c] of WINNING_COMBO) {
+      if (boardData[a] === 'O' && boardData[b] === 'O' && !boardData[c]) return updateBoardData(c);
+      if (boardData[a] === 'O' && boardData[c] === 'O' && !boardData[b]) return updateBoardData(b);
+      if (boardData[b] === 'O' && boardData[c] === 'O' && !boardData[a]) return updateBoardData(a);
+    }
+
+    // 2. Block the player if they're about to win
+    for (let [a, b, c] of WINNING_COMBO) {
+      if (boardData[a] === 'X' && boardData[b] === 'X' && !boardData[c]) return updateBoardData(c);
+      if (boardData[a] === 'X' && boardData[c] === 'X' && !boardData[b]) return updateBoardData(b);
+      if (boardData[b] === 'X' && boardData[c] === 'X' && !boardData[a]) return updateBoardData(a);
     }
     return null;
   };
@@ -120,8 +128,7 @@ export default function TicTacToe() {
       if (boardData[a] && boardData[a] === boardData[b] && boardData[a] === boardData[c]) {
         setWon(true);
         setWonCombo([a, b, c]);
-        setModalTitle(`Player ${!xTurn ? 'X' : 'O'} Win!!!`);
-        updateGameScore(!xTurn ? 'win' : 'lost');
+        setModalTitle(`Player ${!xTurn ? 'X' : 'Bot'} Win!!!`);
         return;
       }
     });
@@ -159,7 +166,7 @@ export default function TicTacToe() {
   const ScoreBoard = ({ score, streak }) => {
     return (
       <Grid container justifyContent={'center'} sx={{ mb: 2 }}>
-        <Grid item xs={4}>
+        <Grid item sm={4} xs={11}>
           <PlayerScoreCard>
             <CardContent>
               <Typography variant="h4" gutterBottom>
