@@ -1,0 +1,35 @@
+{
+  "compilerOptions": {
+    "baseUrl": ".",
+    "module": "ESNext",
+    "moduleResolution": "Node",
+    "jsx": "preserve",
+    "allowJs": true,
+    "strict": false,
+    "forceConsistentCasingInFileNames": true,
+    "noEmit": true,
+    "skipLibCheck": true,
+    "esModuleInterop": true,
+    "resolveJsonModule": true,
+    "isolatedModules": true,
+    "paths": {
+      "@root/*": ["./*"],
+      "@config/*": ["./config/*"],
+      "@store": ["./src/store/index.js"],
+      "@reducers": ["./src/store/reducers/index.js"],
+      "@actions": ["./src/store/actions/index.js"],
+      "@constant/*": ["./src/constant/*"],
+      "@common/*": ["./src/common/*"],
+      "@components/*": ["./src/components/*"],
+      "@containers/*": ["./src/containers/*"],
+      "@session/*": ["./src/session/*"],
+      "@utils/*": ["./src/utils/*"],
+      "@sections/*": ["./src/sections/*"],
+      "@routes/*": ["./src/routes/*"],
+      "@hooks/*": ["./src/hooks/*"],
+      "@helper/*": ["./src/helper/*"]
+    }
+  },
+  "include": ["**/*.js", "**/*.jsx"],
+  "exclude": ["node_modules"]
+}

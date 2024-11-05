@@ -1,0 +1,9 @@
+**/node_modules/**
+**/.next/**
+**/0-document/**
+**/Docker.master/**
+**/express/**
+**/config/**
+**/style/**
+**/public/**
+
