@@ -10,7 +10,7 @@ export function useNavData() {
         subheader: 'Game',
         items: [
           {
-            title: 'TicTacToe',
+            title: 'Tic Tac Toe',
             path: paths.dashboard.game.ticTacToe,
             icon: <SportsEsportsIcon />,
           },
